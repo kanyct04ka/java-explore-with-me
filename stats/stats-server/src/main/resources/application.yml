@@ -11,8 +11,10 @@ spring:
   jpa:
     ddl-auto: validate
     show-sql: true
+    database-platform: "org.hibernate.dialect.PostgreSQLDialect"
     properties:
       hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
         jdbc.time_zone: UTC
         format_sql: true
 
