@@ -1,6 +1,5 @@
 package ru.practicum.ewm.stats.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -98,7 +97,6 @@ public class StatsServiceImplTest {
         assertEquals(1, result.size());
         verify(statsRepository, times(1)).getUniqueStats(any(), any());
         verify(statsRepository, never()).getNotUniqueStats(any(), any());
-
     }
 
     @Test
