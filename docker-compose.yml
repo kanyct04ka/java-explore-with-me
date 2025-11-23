@@ -7,6 +7,8 @@ services:
       - "9090:9090"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
+      - SPRING_DATASOURCE_USERNAME=stats_user
+      - SPRING_DATASOURCE_PASSWORD=12345
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:9090/actuator" ]
       interval: 10s
@@ -26,9 +28,6 @@ services:
       - POSTGRES_DB=stats
       - POSTGRES_USER=stats_user
       - POSTGRES_PASSWORD=12345
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats
-      - SPRING_DATASOURCE_USERNAME=stats_user
-      - SPRING_DATASOURCE_PASSWORD=12345
     volumes:
       - ./stats_data:/var/lib/postgresql/data
     healthcheck:
