@@ -26,3 +26,5 @@ target/
 
 ## Docker
 volumes/
+ewm_data
+stats_data
