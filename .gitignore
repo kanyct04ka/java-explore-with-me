@@ -20,3 +20,11 @@ target/
 *.iws
 *.iml
 *.ipr
+
+## Mac OS X
+.DS_Store
+
+## Docker
+volumes/
+ewm_data
+stats_data
