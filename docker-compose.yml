@@ -29,7 +29,7 @@ services:
       - POSTGRES_USER=stats_user
       - POSTGRES_PASSWORD=12345
     volumes:
-      - ./stats_data:/var/lib/postgresql/data
+      - ./volumes/stats_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -q -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 10s
@@ -63,7 +63,7 @@ services:
       - POSTGRES_USER=ewm_user
       - POSTGRES_PASSWORD=12345
     volumes:
-      - ./ewm_data:/var/lib/postgresql/data
+      - ./volumes/ewm_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -q -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
       interval: 10s

@@ -105,7 +105,7 @@ public class EventServiceImpl implements EventService {
         rangeStart = rangeStart == null ? LocalDateTime.now() : rangeStart;
 
         List<Event> events = eventRepository.findEvents(
-                text.toLowerCase(),
+                text == null ? null : text.toLowerCase(),
                 categories,
                 paid,
                 rangeStart,

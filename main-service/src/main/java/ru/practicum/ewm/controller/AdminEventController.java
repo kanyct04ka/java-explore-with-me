@@ -50,7 +50,7 @@ public class AdminEventController {
     }
 
     @Operation(summary = "Редактирование данных события и его статуса (отклонение/публикация)")
-    @PatchMapping("/eventId")
+    @PatchMapping("/{eventId}")
     public EventFullDto updateEvent_1(
             @PathVariable("eventId") long eventId,
             @RequestBody @Valid EventUpdateAdminDto updateAdminDto
