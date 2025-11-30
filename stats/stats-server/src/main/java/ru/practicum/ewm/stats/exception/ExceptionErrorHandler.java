@@ -1,6 +1,7 @@
 package ru.practicum.ewm.stats.exception;
 
 import jakarta.validation.ValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,11 +11,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class ExceptionErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
+        log.warn("Ошибка валидации параметров: {}", e.getMessage());
+
         String error = "Validation error";
         if (e.getBindingResult().getFieldError() != null) {
             error = e.getBindingResult().getFieldError().getField() + " "
@@ -27,6 +31,8 @@ public class ExceptionErrorHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
+        log.warn("Ошибка валидации параметров: {}", e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", "Invalid parameter: " + e.getName()));
@@ -34,6 +40,8 @@ public class ExceptionErrorHandler {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Object> handleValidation(ValidationException e) {
+        log.warn("Ошибка валидации параметров: {}", e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", e.getMessage()));
@@ -41,6 +49,8 @@ public class ExceptionErrorHandler {
 
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<Object> handleUnexpected(Throwable e) {
+        log.error("НЕПРЕДВИДЕННАЯ ОШИБКА ОБРАБОТКИ: {}", e.getMessage());
+
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", "Unexpected error: " + e.getMessage()));

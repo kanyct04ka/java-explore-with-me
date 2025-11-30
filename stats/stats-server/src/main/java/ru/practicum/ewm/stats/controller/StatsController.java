@@ -1,5 +1,8 @@
 package ru.practicum.ewm.stats.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +17,7 @@ import ru.practicum.ewm.stats.service.StatsService;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Tag(name = "Staistic controller")
 @Slf4j
 @Validated
 @RequiredArgsConstructor
@@ -29,8 +33,10 @@ public class StatsController {
         return statsService.addHit(endpointHitDto);
     }
 
+    @Operation(summary = "Получить статистику", description = "full description of method")
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(
+            @Parameter(description = "ID пользователя. Должен быть > 0", example = "42")
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
             LocalDateTime start,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
