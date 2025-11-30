@@ -20,8 +20,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     List<Event> findAllByInitiatorId(long initiatorId);
 
-    List<Event> findAllById(Collection<Long> ids);
-
     @Query("""
             SELECT e
               FROM Event e

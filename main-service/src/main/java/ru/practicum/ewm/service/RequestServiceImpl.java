@@ -126,7 +126,7 @@ public class RequestServiceImpl implements RequestService {
             throw new ForbiddenException("Статус запросов может менять только инициатор события");
         }
 
-        List<ParticipationRequest> requests = requestRepository.findById(updateRequestDto.getRequestIds());
+        List<ParticipationRequest> requests = requestRepository.findAllById(updateRequestDto.getRequestIds());
 
         if (requests.stream()
                 .anyMatch(req -> req.getEvent().getId() != eventId

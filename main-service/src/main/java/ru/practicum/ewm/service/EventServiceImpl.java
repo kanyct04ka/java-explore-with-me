@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
     @Value("${app.name}")
-    private final String appName;
+    private String appName;
     private final LocalDateTime appCreationDate = LocalDateTime.parse("2025-11-30 12:00:00",
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 

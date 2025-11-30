@@ -79,7 +79,7 @@ public class ExceptionErrorHandler {
 
         ErrorDto errorDto = ErrorDto.builder()
                 .message("НЕПРЕДВИДЕННАЯ ОШИБКА")
-                .reason("а пёс его зане...")
+                .reason("а пёс его знает...")
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
                 .timestamp(LocalDateTime.now())
                 .build();
