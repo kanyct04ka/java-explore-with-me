@@ -29,7 +29,7 @@ public class PrivateEventController {
 
     @Operation(summary = "Получение событий, добавленных текущим пользователем")
     @GetMapping
-    public List<EventShortDto> getEvents (
+    public List<EventShortDto> getEvents(
             @PathVariable("userId") long userId,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size
@@ -41,7 +41,7 @@ public class PrivateEventController {
     @Operation(summary = "Добавление нового события")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto addEvent (
+    public EventFullDto addEvent(
             @PathVariable("userId") long userId,
             @RequestBody @Valid EventCreateDto eventCreateDto
     ) {
@@ -51,7 +51,7 @@ public class PrivateEventController {
 
     @Operation(summary = "Получение полной информации о событии добавленном текущим пользователем")
     @GetMapping("/{eventId}")
-    public EventFullDto getEvent (
+    public EventFullDto getEvent(
             @PathVariable("userId") long userId,
             @PathVariable("eventId") long eventId
     ) {
@@ -61,7 +61,7 @@ public class PrivateEventController {
 
     @Operation(summary = "Изменение события добавленного текущим пользователем")
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEvent (
+    public EventFullDto updateEvent(
             @PathVariable("userId") long userId,
             @PathVariable("eventId") long eventId,
             @RequestBody @Valid EventUpdateUserDto eventUpdateUserDto
@@ -73,7 +73,7 @@ public class PrivateEventController {
 
     @Operation(summary = "Получение информации о запросах на участие в событии текущего пользователя")
     @GetMapping("/{eventId}/requests")
-    public List<ParticipationRequestDto> getEventParticipants (
+    public List<ParticipationRequestDto> getEventParticipants(
             @PathVariable Long userId,
             @PathVariable Long eventId
     ) {
@@ -84,7 +84,7 @@ public class PrivateEventController {
 
     @Operation(summary = "Изменение статуса (подтверждена, отменена) заявок на участие в событии текущего пользователя")
     @PatchMapping("/{eventId}/requests")
-    public RequestStatusUpdateResult changeRequestStatus (
+    public RequestStatusUpdateResult changeRequestStatus(
             @PathVariable Long userId,
             @PathVariable Long eventId,
             @RequestBody @Valid RequestStatusUpdateDto updateRequestDto

@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 public class EventServiceImpl implements EventService {
 
     @Value("${app.name}")
-    private final String APP_NAME;
-    private final LocalDateTime APP_CREATION_DATE = LocalDateTime.parse("2025-11-30 12:00:00",
+    private final String appName;
+    private final LocalDateTime appCreationDate = LocalDateTime.parse("2025-11-30 12:00:00",
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
     private final StatsClient statsClient;
@@ -270,7 +270,7 @@ public class EventServiceImpl implements EventService {
 
         var state = event.getState();
         var updateStateAction = updateData.getStateAction();
-        if (updateStateAction!= null) {
+        if (updateStateAction != null) {
 
             if (updateStateAction == EventStateAction.PUBLISH_EVENT) {
                 if (state != EventState.PENDING) {
@@ -336,7 +336,7 @@ public class EventServiceImpl implements EventService {
         statsClient.addHit(
                 EndpointHitDto.builder()
                         .uri(uri)
-                        .app(APP_NAME)
+                        .app(appName)
                         .ip(ip)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -347,7 +347,7 @@ public class EventServiceImpl implements EventService {
         List<String> uris = List.of("/events/" + eventId);
 
         List<ViewStatsDto> stats = statsClient.getStats(
-                APP_CREATION_DATE,
+                appCreationDate,
                 LocalDateTime.now(),
                 uris,
                 false
@@ -362,7 +362,7 @@ public class EventServiceImpl implements EventService {
                 .toList();
 
         List<ViewStatsDto> stats = statsClient.getStats(
-                APP_CREATION_DATE,
+                appCreationDate,
                 LocalDateTime.now(),
                 uris,
                 false

@@ -23,7 +23,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllById(Collection<Long> ids);
 
     @Query("""
-            SELECT e 
+            SELECT e
               FROM Event e
              WHERE (:users IS NULL OR e.initiator.id IN :users)
                AND (:states IS NULL OR e.state IN :states)
@@ -42,10 +42,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     );
 
     @Query("""
-            SELECT e 
+            SELECT e
               FROM Event e
              WHERE e.state = :state
-               AND (:text IS NULL 
+               AND (:text IS NULL
                     OR (LOWER(e.annotation) LIKE %:text%
                         OR LOWER(e.description) LIKE %:text%
                     )
@@ -54,7 +54,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                AND (:paid IS NULL OR e.paid = :paid)
                AND e.eventDate >= COALESCE(:rangeStart, e.eventDate)
                AND e.eventDate <= COALESCE(:rangeEnd,   e.eventDate)
-               AND (:onlyAvailable IS NULL 
+               AND (:onlyAvailable IS NULL
                     OR :onlyAvailable = false
                     OR COALESCE(e.participantLimit, 0) = 0
                     OR COALESCE(e.confirmedRequests, 0) < COALESCE(e.participantLimit, 0)
