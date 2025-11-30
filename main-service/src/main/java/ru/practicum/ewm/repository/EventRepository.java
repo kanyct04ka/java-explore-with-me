@@ -8,7 +8,6 @@ import ru.practicum.ewm.model.Event;
 import ru.practicum.ewm.model.EventState;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
