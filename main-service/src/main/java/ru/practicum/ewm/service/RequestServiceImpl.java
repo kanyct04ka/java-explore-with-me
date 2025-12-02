@@ -140,7 +140,7 @@ public class RequestServiceImpl implements RequestService {
         var newStatus = updateRequestDto.getStatus();
 
         if (newStatus ==  RequestStatus.CONFIRMED
-                && event.getConfirmedRequests() + requests.size() > event.getParticipantLimit() ) {
+                && event.getConfirmedRequests() + requests.size() > event.getParticipantLimit()) {
             throw new ConflictDataException("не влезет");
         }
 
