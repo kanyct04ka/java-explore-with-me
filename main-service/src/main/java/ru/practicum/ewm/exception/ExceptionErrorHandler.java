@@ -74,8 +74,8 @@ public class ExceptionErrorHandler {
                 .body(errorDto);
     }
 
-    @ExceptionHandler(Throwable.class)
-    public ResponseEntity<Object> handleUnexpected(Throwable e) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleUnexpected(Exception e) {
         log.error("НЕПРЕДВИДЕННАЯ ОШИБКА ОБРАБОТКИ: {}", e.getMessage());
 
         ErrorDto errorDto = ErrorDto.builder()

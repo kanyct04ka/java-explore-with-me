@@ -49,10 +49,10 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto addEvent(long userId, EventCreateDto eventCreateDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанный пользователь не найден"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанный пользователь ид=%s не найден", userId)));
 
         Category category = categoryRepository.findById(eventCreateDto.getCategory())
-                .orElseThrow(() -> new ValidationException("Указан ид несуществующей категории"));
+                .orElseThrow(() -> new ValidationException(String.format("Указан ид=%s несуществующей категории", eventCreateDto.getCategory())));
 
         Event event = eventMapper.toEvent(eventCreateDto);
         event.setInitiator(user);
@@ -67,7 +67,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getEvent(long eventId, String uri, String ip) {
         Event event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
-                .orElseThrow(() -> new EntityNotFoundException("Указанное событие не найдено"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанное событие ид=%s не найдено", eventId)));
 
         addHit(uri, ip);
         return eventMapper.toEventFullDto(event, getEventView(eventId));
@@ -122,10 +122,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getUserEvent(long userId, long eventId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанный пользователь не найден"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанный пользователь ид=%s не найден", userId)));
 
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанное событие не найдено"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанное событие ид=%s не найдено", eventId)));
 
         return eventMapper.toEventFullDto(event, getEventView(eventId));
     }
@@ -133,7 +133,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getUserEvents(long userId, Pageable pageable) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанный пользователь не найден"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанный пользователь ид=%s не найден", userId)));
 
         return eventRepository.findAllByInitiatorId(userId, pageable)
                 .stream()
@@ -171,10 +171,10 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto updateEventByUser(long userId, long eventId, EventUpdateUserDto eventUpdateUserDto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанный пользователь не найден"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанный пользователь ид=%s не найден", userId)));
 
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанное событие не найдено или принадлежит другому пользователю"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанное событие ид=%s не найдено или принадлежит другому пользователю", eventId)));
 
         if (event.getState() == EventState.PUBLISHED) {
             throw new ConflictDataException("Изменить событие нельзя, т.к. оно опубликовано");
@@ -194,7 +194,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto updateEventByAdmin(long eventId, EventUpdateAdminDto eventUpdateAdminDto) {
         Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанное событие не найдено"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанное событие ид=%s не найдено", eventId)));
 
         return eventMapper.toEventFullDto(
                 eventRepository.save(updateEventByAdminData(event, eventUpdateAdminDto)),
@@ -207,7 +207,7 @@ public class EventServiceImpl implements EventService {
 
         if (updateData.getCategory() != null) {
             var category = categoryRepository.findById(updateData.getCategory())
-                    .orElseThrow(() -> new ValidationException("Указан ид несуществующей категории"));
+                    .orElseThrow(() -> new ValidationException(String.format("Указан ид=%s несуществующей категории", updateData.getCategory())));
             event.setCategory(category);
         }
 

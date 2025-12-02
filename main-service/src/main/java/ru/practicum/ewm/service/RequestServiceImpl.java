@@ -123,7 +123,7 @@ public class RequestServiceImpl implements RequestService {
     @Transactional
     public RequestStatusUpdateResult changeRequestStatus(long userId, long eventId, RequestStatusUpdateDto updateRequestDto) {
         Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанное событие не найдено"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанное событие ид=%s для пользователя ид=%s не найдено", eventId, userId)));
 
         if (event.getInitiator().getId() != userId) {
             throw new ForbiddenException("Статус запросов может менять только инициатор события");
@@ -156,7 +156,7 @@ public class RequestServiceImpl implements RequestService {
         } else if (newStatus == RequestStatus.REJECTED) {
             result.getRejectedRequests().addAll(requests.stream().map(requestMapper::toRequestDto).toList());
         } else {
-            throw new ConflictDataException("Указан неверный статус");
+            throw new ConflictDataException(String.format("Указан неверный статус %s", newStatus));
         }
 
         return result;

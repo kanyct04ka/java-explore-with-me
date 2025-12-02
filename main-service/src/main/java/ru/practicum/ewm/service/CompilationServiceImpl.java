@@ -61,7 +61,7 @@ public class CompilationServiceImpl implements CompilationService {
         }
 
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанная подборка не найдена"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанная подборка ид=%s не найдена", compId)));
 
         if (compilationUpdateDto.getEvents() != null && !compilationUpdateDto.getEvents().isEmpty()) {
             compilation.setEvents(new HashSet<>(eventRepository.findAllById(compilationUpdateDto.getEvents())));
@@ -81,7 +81,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto getCompilation(Long compId) {
         Compilation compilation = compilationRepository.findById(compId)
-                .orElseThrow(() -> new EntityNotFoundException("Указанная подборка не найдена"));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Указанная подборка ид=%s не найдена", compId)));
 
         return compilationMapper.toCompilationDto(compilation);
     }

@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
-@Validated
 @RequiredArgsConstructor
 @RestController
 @Tag(name = "Public: События")

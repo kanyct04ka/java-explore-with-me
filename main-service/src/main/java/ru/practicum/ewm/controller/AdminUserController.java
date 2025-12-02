@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.UserCreateDto;
 import ru.practicum.ewm.dto.UserDto;
@@ -16,7 +15,6 @@ import ru.practicum.ewm.service.UserService;
 import java.util.List;
 
 @Slf4j
-@Validated
 @RequiredArgsConstructor
 @RestController
 @Tag(name = "Admin: Пользователи")
