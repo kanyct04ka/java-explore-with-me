@@ -26,6 +26,11 @@ spring:
 
 logging:
   level:
+
     org.hibernate:
       SQL: DEBUG
       orm.jdbc.bind: trace
+
+    org.springframework:
+      web: DEBUG
+      web.servlet.DispatcherServlet: DEBUG

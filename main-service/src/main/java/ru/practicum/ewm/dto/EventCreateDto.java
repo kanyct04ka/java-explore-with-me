@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class EventCreateDto {
 
     @NotBlank
@@ -29,6 +30,7 @@ public class EventCreateDto {
     private Integer category;
 
     @NotNull
+    @FutureOrPresent
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
 
@@ -39,6 +41,7 @@ public class EventCreateDto {
     private boolean paid = false;
 
     @Builder.Default
+    @PositiveOrZero
     private int participantLimit = 0;
 
     @Builder.Default

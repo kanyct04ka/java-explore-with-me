@@ -7,7 +7,6 @@ import ru.practicum.ewm.stats.dto.EndpointHitDto;
 import ru.practicum.ewm.stats.dto.ViewStatsDto;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -36,8 +35,8 @@ public class StatsClient {
 
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
                 .fromPath("/stats")
-                .queryParam("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .queryParam("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                .queryParam("start", start)
+                .queryParam("end", end);
 
         if (uris != null && !uris.isEmpty()) {
             uriComponentsBuilder.queryParam("uris", uris);
@@ -48,7 +47,7 @@ public class StatsClient {
         }
 
         return restClient.get()
-                .uri(uriComponentsBuilder.build().toUri())
+                .uri(uriComponentsBuilder.encode().toUriString())
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<ViewStatsDto>>() {});
     }

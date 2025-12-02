@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.UserCreateDto;
+import ru.practicum.ewm.dto.UserDto;
 import ru.practicum.ewm.service.UserService;
 
 import java.util.List;
@@ -27,11 +28,11 @@ public class AdminUserController {
     @Operation(summary = "Добавление нового пользователя")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerUser(
+    public UserDto registerUser(
             @RequestBody @Valid UserCreateDto userCreateDto
     ) {
         log.info("Получен запрос от админа на добавление нового пользователя: {}", userCreateDto);
-        userService.addUser(userCreateDto);
+        return userService.addUser(userCreateDto);
     }
 
     @Operation(summary = "Удаление пользователя")
@@ -46,13 +47,13 @@ public class AdminUserController {
 
     @Operation(summary = "Получение информации о пользователях")
     @GetMapping
-    public void getUsers(
+    public List<UserDto> getUsers(
             @RequestParam(required = false) List<Long> ids,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size
     ) {
         log.info("Получен запрос от админа на выборку пользователей");
-        userService.getUsers(ids, PageRequest.of(from / size, size));
+        return userService.getUsers(ids, PageRequest.of(from / size, size));
     }
 
 }

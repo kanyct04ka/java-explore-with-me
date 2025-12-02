@@ -34,7 +34,7 @@ public class RequestServiceImpl implements RequestService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Указанный пользователь не найден"));
 
-        Event event = eventRepository.findByIdAndInitiatorId(eventId, userId)
+        Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EntityNotFoundException("Указанное событие не найдено"));
 
         if (event.getInitiator().getId() == userId) {
@@ -50,8 +50,7 @@ public class RequestServiceImpl implements RequestService {
         }
 
         var limit = event.getParticipantLimit();
-        if (limit != null && limit > 0
-                && limit <= requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED)) {
+        if (limit > 0 && limit <= requestRepository.countByEventIdAndStatus(event.getId(), RequestStatus.CONFIRMED)) {
             throw new ConflictDataException("Сорян, но больше не влезет");
         }
 
@@ -61,6 +60,10 @@ public class RequestServiceImpl implements RequestService {
                 .created(LocalDateTime.now())
                 .status(event.isRequestModeration() ? RequestStatus.PENDING : RequestStatus.CONFIRMED)
                 .build();
+
+        if (event.getParticipantLimit() == 0) {
+            request.setStatus(RequestStatus.CONFIRMED);
+        }
 
         if (request.getStatus() == RequestStatus.CONFIRMED) {
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
@@ -130,21 +133,27 @@ public class RequestServiceImpl implements RequestService {
 
         if (requests.stream()
                 .anyMatch(req -> req.getEvent().getId() != eventId
-                        || req.getStatus() == RequestStatus.PENDING)) {
+                        || req.getStatus() != RequestStatus.PENDING)) {
             throw new ConflictDataException("Не все запросы из списка относятся к событию или не в статусе PENDING");
         }
 
-        var status = updateRequestDto.getStatus();
-        requests.forEach(r -> r.setStatus(status));
+        var newStatus = updateRequestDto.getStatus();
+
+        if (newStatus ==  RequestStatus.CONFIRMED
+                && event.getConfirmedRequests() + requests.size() > event.getParticipantLimit() ) {
+            throw new ConflictDataException("не влезет");
+        }
+
+        requests.forEach(r -> r.setStatus(newStatus));
         requestRepository.saveAll(requests);
 
         RequestStatusUpdateResult result = new RequestStatusUpdateResult();
-        if (status == RequestStatus.CONFIRMED) {
+        if (newStatus == RequestStatus.CONFIRMED) {
             event.setConfirmedRequests(event.getConfirmedRequests() + requests.size());
             eventRepository.save(event);
 
             result.getConfirmedRequests().addAll(requests.stream().map(requestMapper::toRequestDto).toList());
-        } else if (status == RequestStatus.REJECTED) {
+        } else if (newStatus == RequestStatus.REJECTED) {
             result.getRejectedRequests().addAll(requests.stream().map(requestMapper::toRequestDto).toList());
         } else {
             throw new ConflictDataException("Указан неверный статус");

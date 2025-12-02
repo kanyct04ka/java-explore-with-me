@@ -2,6 +2,7 @@ package ru.practicum.ewm.service;
 
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -133,7 +135,7 @@ public class EventServiceImpl implements EventService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Указанный пользователь не найден"));
 
-        return eventRepository.findAllByInitiatorId(userId)
+        return eventRepository.findAllByInitiatorId(userId, pageable)
                 .stream()
                 .map(eventMapper::toEventShortDto)
                 .toList();
@@ -178,10 +180,10 @@ public class EventServiceImpl implements EventService {
             throw new ConflictDataException("Изменить событие нельзя, т.к. оно опубликовано");
         }
 
-        if (event.getEventDate().minusHours(2L).isAfter(LocalDateTime.now())) {
+        if (event.getEventDate().minusHours(2L).isBefore(LocalDateTime.now())) {
             throw new ConflictDataException("Событие можно менять не позднее чем за 2 часа до начала");
         }
-
+        log.info("{} views {}", eventId, getEventView(eventId));
         return eventMapper.toEventFullDto(
                 eventRepository.save(updateEventByUserData(event, eventUpdateUserDto)),
                 getEventView(eventId)
@@ -221,20 +223,23 @@ public class EventServiceImpl implements EventService {
             }
         }
 
+        if (updateData.getEventDate() != null) {
+            if (updateData.getEventDate().isBefore(LocalDateTime.now())) {
+                throw new ValidationException("Дата события не может быть в прошлом");
+            }
+            event.setEventDate(updateData.getEventDate());
+        }
+
         if (updateData.getTitle() != null) {
             event.setTitle(updateData.getTitle());
         }
 
         if (updateData.getAnnotation() != null) {
-            event.setTitle(updateData.getAnnotation());
+            event.setAnnotation(updateData.getAnnotation());
         }
 
         if (updateData.getDescription() != null) {
             event.setDescription(updateData.getDescription());
-        }
-
-        if (updateData.getEventDate() != null) {
-            event.setEventDate(updateData.getEventDate());
         }
 
         if (updateData.getParticipantLimit() != null) {
@@ -272,11 +277,13 @@ public class EventServiceImpl implements EventService {
         var updateStateAction = updateData.getStateAction();
         if (updateStateAction != null) {
 
+            log.warn("state = {}    stateAction = {}", state, updateStateAction);
+
             if (updateStateAction == EventStateAction.PUBLISH_EVENT) {
                 if (state != EventState.PENDING) {
                     throw new ConflictDataException("Публиковать можно только события ожидающие публикации");
                 }
-                if (event.getEventDate().minusHours(1L).isAfter(LocalDateTime.now())) {
+                if (event.getEventDate().minusHours(1L).isBefore(LocalDateTime.now())) {
                     throw new ConflictDataException("Событие можно менять не позднее чем за час до начала");
                 }
                 event.setState(EventState.PUBLISHED);
@@ -286,7 +293,7 @@ public class EventServiceImpl implements EventService {
                 if (state == EventState.PUBLISHED) {
                     throw new ConflictDataException("Отменить опубликованное событие нельзя");
                 }
-                event.setState(EventState.PENDING);
+                event.setState(EventState.CANCELED);
 
             } else {
                 throw new ValidationException("Указан некорректный для данного метода stateAction");
@@ -298,7 +305,7 @@ public class EventServiceImpl implements EventService {
         }
 
         if (updateData.getAnnotation() != null) {
-            event.setTitle(updateData.getAnnotation());
+            event.setAnnotation(updateData.getAnnotation());
         }
 
         if (updateData.getDescription() != null) {
@@ -306,6 +313,9 @@ public class EventServiceImpl implements EventService {
         }
 
         if (updateData.getEventDate() != null) {
+            if (updateData.getEventDate().isBefore(LocalDateTime.now())) {
+                throw new ValidationException("Дата события не может быть в прошлом");
+            }
             event.setEventDate(updateData.getEventDate());
         }
 
@@ -350,7 +360,7 @@ public class EventServiceImpl implements EventService {
                 appCreationDate,
                 LocalDateTime.now(),
                 uris,
-                false
+                true
         );
 
         return stats.isEmpty() ? 0L : stats.getFirst().getHits();

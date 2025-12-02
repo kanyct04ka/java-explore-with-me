@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.CategoryDataDto;
+import ru.practicum.ewm.dto.CategoryDto;
 import ru.practicum.ewm.service.CategoryService;
 
 @Slf4j
@@ -23,11 +24,12 @@ public class AdminCategoryController {
 
     @Operation(summary = "Добавление новой категории")
     @PostMapping
-    public void addCategory(
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoryDto addCategory(
             @RequestBody @Valid CategoryDataDto categoryDataDto
     ) {
         log.info("Получен запрос от админа на добавление новой категории: {}", categoryDataDto);
-        categoryService.addCategory(categoryDataDto);
+        return categoryService.addCategory(categoryDataDto);
     }
 
     @Operation(summary = "Удаление категории")
@@ -42,12 +44,12 @@ public class AdminCategoryController {
 
     @Operation(summary = "Изменение категории")
     @PatchMapping("/{catId}")
-    public void updateCategory(
+    public CategoryDto updateCategory(
             @PathVariable int catId,
             @RequestBody @Valid CategoryDataDto categoryDataDto
     ) {
         log.info("Получен запрос от админа на изменение категории с ид={}: {}", catId, categoryDataDto);
-        categoryService.updateCategory(catId, categoryDataDto);
+        return categoryService.updateCategory(catId, categoryDataDto);
     }
 
 }

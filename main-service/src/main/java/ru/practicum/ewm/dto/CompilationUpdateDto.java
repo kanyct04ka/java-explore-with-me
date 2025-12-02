@@ -10,6 +10,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CompilationUpdateDto {
 
     @Size(max = 50)

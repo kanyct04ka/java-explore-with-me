@@ -22,7 +22,7 @@ spring:
       properties:
         hibernate:
           dialect: "org.hibernate.dialect.PostgreSQLDialect"
-          jdbc.time_zone: UTC
+#          jdbc.time_zone: UTC
           format_sql: true
 
   datasource:
@@ -31,12 +31,14 @@ spring:
     username: "ewm_user"
     password: "12345"
 
-  logging:
-    level:
+logging:
+  level:
+    root: INFO
 
-      org.hibernate:
-        SQL: DEBUG
-        orm.jdbc.bind: trace
+    org.hibernate:
+      SQL: DEBUG
+      orm.jdbc.bind: trace
 
-      org.springframework:
-          web.servlet.DispatcherServlet: DEBUG
+    org.springframework:
+        web: DEBUG
+        web.servlet.DispatcherServlet: DEBUG

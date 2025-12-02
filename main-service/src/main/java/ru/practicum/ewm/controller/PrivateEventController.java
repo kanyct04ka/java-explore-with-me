@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Tag(name = "Private: События")
-@RequestMapping("/users/{userid}/events")
+@RequestMapping("/users/{userId}/events")
 public class PrivateEventController {
 
     private final EventService eventService;
@@ -89,7 +89,7 @@ public class PrivateEventController {
             @PathVariable Long eventId,
             @RequestBody @Valid RequestStatusUpdateDto updateRequestDto
     ) {
-        log.info("Запрос пользователя с ид={} для события {} на изменение статуса заявок: {}",
+        log.info("Получен запрос пользователя с ид={} для события {} на изменение статуса заявок: {}",
                 userId, eventId, updateRequestDto);
         return requestService.changeRequestStatus(userId, eventId, updateRequestDto);
     }

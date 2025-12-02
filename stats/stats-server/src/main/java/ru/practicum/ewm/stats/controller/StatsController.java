@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,16 +36,16 @@ public class StatsController {
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(
             @Parameter(description = "ID пользователя. Должен быть > 0", example = "42")
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+            @RequestParam
             LocalDateTime start,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+            @RequestParam
             LocalDateTime end,
             @RequestParam(required = false)
             List<String> uris,
             @RequestParam(required = false, defaultValue = "false")
             Boolean unique
     ) {
-        log.info("Запрос на выгрузку статистики за период с {} по {}", start, end);
+        log.info("Получен запрос на выгрузку статистики за период с {} по {}", start, end);
         return statsService.getStats(start, end, uris, unique);
     }
 }

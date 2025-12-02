@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class EventUpdateAdminDto {
 
     @Size(min = 3, max = 120)

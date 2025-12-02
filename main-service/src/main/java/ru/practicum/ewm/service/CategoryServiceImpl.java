@@ -11,6 +11,7 @@ import ru.practicum.ewm.exception.EntityNotFoundException;
 import ru.practicum.ewm.mapper.CategoryMapper;
 import ru.practicum.ewm.model.Category;
 import ru.practicum.ewm.repository.CategoryRepository;
+import ru.practicum.ewm.repository.EventRepository;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional
@@ -36,7 +38,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void removeCategory(int catId) {
-//        TODO: добавить проверку на наличие событий, привязанных к категории
+        if (!eventRepository.findByCategoryId(catId).isEmpty()) {
+            throw new ConflictDataException("Удалять категорию с привязанными событиями низя");
+        }
 
         categoryRepository.deleteById(catId);
     }
@@ -53,7 +57,8 @@ public class CategoryServiceImpl implements CategoryService {
                 () -> new EntityNotFoundException(String.format("Категория с указанным ид=%s не найдена", catId))
         );
 
-        if (categoryRepository.findByName(categoryDataDto.getName()).isPresent()) {
+        var cat = categoryRepository.findByName(categoryDataDto.getName());
+        if (cat.isPresent() && cat.get().getId() != catId) {
             throw new ConflictDataException("Категория с таким именем существует");
         }
 

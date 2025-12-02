@@ -27,7 +27,7 @@ public class PrivateRequestController {
     public List<ParticipationRequestDto> getUserRequests(
             @PathVariable Long userId
     ) {
-        log.info("Запрос пользователя ид={} на получение своих запросов", userId);
+        log.info("Получен запрос пользователя ид={} на получение своих запросов", userId);
         return requestService.getUserRequests(userId);
     }
 
@@ -38,7 +38,7 @@ public class PrivateRequestController {
             @PathVariable Long userId,
             @RequestParam Long eventId
     ) {
-        log.info("Запрос пользователя ид={} на участие в событии ид={}", userId, eventId);
+        log.info("Получен запрос пользователя ид={} на участие в событии ид={}", userId, eventId);
         return requestService.addRequest(userId, eventId);
     }
 
@@ -48,7 +48,7 @@ public class PrivateRequestController {
             @PathVariable Long userId,
             @PathVariable Long requestId
     ) {
-        log.info("Запрос пользователя ид={} на отмену запроса ид={}", userId, requestId);
+        log.info("Получен запрос пользователя ид={} на отмену запроса ид={}", userId, requestId);
         return requestService.cancelRequest(userId, requestId);
     }
 

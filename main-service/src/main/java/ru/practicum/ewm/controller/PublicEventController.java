@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.EventFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.service.EventService;
 
@@ -38,7 +39,7 @@ public class PublicEventController {
             @RequestParam(defaultValue = "10") int size,
             HttpServletRequest request
     ) {
-        log.info("Публичный запрос на получение событий");
+        log.info("Получен запрос публичный на получение событий");
         return eventService.getEvents(
                 text,
                 categories,
@@ -56,12 +57,12 @@ public class PublicEventController {
 
     @Operation(summary = "Получение подробной информации об опубликованном событии по его идентификатору")
     @GetMapping("/{id}")
-    public void getEvent_1(
+    public EventFullDto getEvent_1(
             @PathVariable long id,
             HttpServletRequest request
     ) {
-        log.info("Публичный запрос на получение события ид={}", id);
-        eventService.getEvent(id, request.getRequestURI(), request.getRemoteAddr());
+        log.info("Получен запрос публичный на получение события ид={}", id);
+        return eventService.getEvent(id, request.getRequestURI(), request.getRemoteAddr());
     }
 
 }
