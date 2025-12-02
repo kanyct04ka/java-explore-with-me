@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,9 +39,9 @@ public class StatsController {
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(
             @Parameter(description = "ID пользователя. Должен быть > 0", example = "42")
-            @RequestParam @NotNull
+            @RequestParam
             String start,
-            @RequestParam @NotNull
+            @RequestParam
             String end,
             @RequestParam(required = false)
             List<String> uris,

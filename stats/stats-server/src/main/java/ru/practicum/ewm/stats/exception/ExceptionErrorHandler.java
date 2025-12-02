@@ -15,6 +15,15 @@ import java.util.Map;
 @RestControllerAdvice
 public class ExceptionErrorHandler {
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgument(IllegalArgumentException e) {
+        log.warn("Ошибка валидации параметров: {}", e.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", e.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         log.warn("Ошибка валидации параметров: {}", e.getMessage());
