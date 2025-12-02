@@ -44,7 +44,7 @@ public class Event {
     private LocalDateTime eventDate;
 
     @Column(name = "confirmed_requests")
-    private Integer confirmedRequests;
+    private int confirmedRequests;
 
     @Embedded
     private Location location;
