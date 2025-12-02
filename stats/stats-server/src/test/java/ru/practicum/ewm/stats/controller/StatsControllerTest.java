@@ -64,7 +64,7 @@ public class StatsControllerTest {
         when(statsService.getStats(start, end, null, true))
                 .thenReturn(stats);
 
-        var result = statsController.getStats(start, end, null, true);
+        var result = statsController.getStats(start.toString(), end.toString(), null, true);
 
         assertNotNull(result);
         assertEquals(1, result.size());

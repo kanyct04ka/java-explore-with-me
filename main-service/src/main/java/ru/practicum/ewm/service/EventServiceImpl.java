@@ -277,8 +277,6 @@ public class EventServiceImpl implements EventService {
         var updateStateAction = updateData.getStateAction();
         if (updateStateAction != null) {
 
-            log.warn("state = {}    stateAction = {}", state, updateStateAction);
-
             if (updateStateAction == EventStateAction.PUBLISH_EVENT) {
                 if (state != EventState.PENDING) {
                     throw new ConflictDataException("Публиковать можно только события ожидающие публикации");
