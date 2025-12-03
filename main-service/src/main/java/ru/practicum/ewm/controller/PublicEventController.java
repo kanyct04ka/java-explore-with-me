@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.EventFullDto;
+import ru.practicum.ewm.dto.EventPublicFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.service.EventService;
 
@@ -55,7 +55,7 @@ public class PublicEventController {
 
     @Operation(summary = "Получение подробной информации об опубликованном событии по его идентификатору")
     @GetMapping("/{id}")
-    public EventFullDto getEvent_1(
+    public EventPublicFullDto getEvent_1(
             @PathVariable long id,
             HttpServletRequest request
     ) {

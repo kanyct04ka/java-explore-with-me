@@ -68,4 +68,7 @@ public class Event {
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
 
+    @Column(name = "moderation_resolution", length = 1000)
+    private String moderationResolution;
+
 }

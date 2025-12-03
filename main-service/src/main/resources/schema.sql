@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS events (
     views INT8 DEFAULT 0,
     created_on TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     published_on TIMESTAMP WITHOUT TIME ZONE,
+    moderation_resolution VARCHAR(1000),
 
     CONSTRAINT fk_events_categories FOREIGN KEY (category_id) REFERENCES categories (id),
     CONSTRAINT fk_events_users FOREIGN KEY (initiator_id) REFERENCES users (id)

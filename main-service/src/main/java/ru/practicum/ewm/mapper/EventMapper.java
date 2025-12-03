@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import ru.practicum.ewm.dto.EventCreateDto;
 import ru.practicum.ewm.dto.EventFullDto;
+import ru.practicum.ewm.dto.EventPublicFullDto;
 import ru.practicum.ewm.dto.EventShortDto;
 import ru.practicum.ewm.model.Event;
 
@@ -22,6 +23,11 @@ public interface EventMapper {
     @Mapping(target = "category", qualifiedByName = "toCategoryDto")
     EventFullDto toEventFullDto(Event event, Long views);
 
+    @Mapping(target = "initiator", qualifiedByName = "toUserShortDto")
+    @Mapping(target = "category", qualifiedByName = "toCategoryDto")
+    EventPublicFullDto toEventPublicFullDto(Event event, Long views);
+
     @Named("toEventShortDto")
     EventShortDto toEventShortDto(Event event);
+
 }
