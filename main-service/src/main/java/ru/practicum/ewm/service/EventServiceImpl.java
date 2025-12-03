@@ -65,12 +65,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEvent(long eventId, String uri, String ip) {
+    public EventPublicFullDto getEvent(long eventId, String uri, String ip) {
         Event event = eventRepository.findByIdAndState(eventId, EventState.PUBLISHED)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Указанное событие ид=%s не найдено", eventId)));
 
         addHit(uri, ip);
-        return eventMapper.toEventFullDto(event, getEventView(eventId));
+        return eventMapper.toEventPublicFullDto(event, getEventView(eventId));
     }
 
     @Override
@@ -216,6 +216,8 @@ public class EventServiceImpl implements EventService {
 
             if (stateAction == EventStateAction.SEND_TO_REVIEW) {
                 event.setState(EventState.PENDING);
+//              можно добавить очистку предыдущей резолюции модерации,
+//              но лучше чтоб админ видел и мог быстро понять исправлены замечания или нет
             } else if (stateAction == EventStateAction.CANCEL_REVIEW) {
                 event.setState(EventState.CANCELED);
             } else {
@@ -286,6 +288,35 @@ public class EventServiceImpl implements EventService {
                 }
                 event.setState(EventState.PUBLISHED);
                 event.setPublishedOn(LocalDateTime.now());
+//                очищаем резолюцию модерации чтоб не смущала потом, раз опубликована то все замечания сняты
+                event.setModerationResolution(null);
+
+//            так как не проходят стандартные тесты, пришлось вынести возврат на доработку в отдельный StateAction
+            } else if (updateStateAction == EventStateAction.RETURN_EVENT_FOR_MODIFY) {
+                if (state == EventState.PUBLISHED) {
+                    throw new ConflictDataException("вернуть опубликованное событие нельзя");
+                }
+                if (updateData.getModerationResolution() == null ||
+                        updateData.getModerationResolution().isBlank()) {
+                    throw new ValidationException("При возврате обязательно надо указывать причину");
+                }
+                event.setState(EventState.MODERATION_FAILED);
+                event.setModerationResolution(updateData.getModerationResolution());
+
+//                но по хорошему блок с обработкой StateAction == RETURN_EVENT_FOR_MODIFY не нужен
+//                надо просто заменить блок обработки StateAction == REJECT_EVENT на тот что закомментирован ниже
+//                с простой логикой - админ либо публикует либо возвращает пользователю с комментарием отказа
+//                и дальше пользователь либо отменяет либо вносит правки и отправляет снова на проверку
+//
+//            } else if (updateStateAction == EventStateAction.REJECT_EVENT) {
+//                if (state == EventState.PUBLISHED) {
+//                    throw new ConflictDataException("Отменить опубликованное событие нельзя");
+//                }
+//                if (updateData.getModerationResolution() == null || updateData.getModerationResolution().isBlank()) {
+//                    throw new ValidationException("При отмене обязательно надо указывать причину");
+//                }
+//                event.setState(EventState.MODERATION_FAILED);
+//                event.setModerationResolution(updateData.getModerationResolution());
 
             } else if (updateStateAction == EventStateAction.REJECT_EVENT) {
                 if (state == EventState.PUBLISHED) {

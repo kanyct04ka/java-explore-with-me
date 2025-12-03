@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EventFullDto {
+public class EventPublicFullDto {
 
     private long id;
     private String title;
@@ -35,8 +35,5 @@ public class EventFullDto {
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime publishedOn;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String moderationResolution;
 
 }
