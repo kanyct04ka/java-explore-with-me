@@ -1,0 +1,532 @@
+{
+	"info": {
+		"_postman_id": "42568100-e443-4d36-839a-755e7cbd6601",
+		"name": "ewm-feature-moderation-enhancement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13019739"
+	},
+	"item": [
+		{
+			"name": "1 - create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.environment.set(\"userId\", jsonData.id);",
+							"",
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';",
+							"let r = '';",
+							"for (let i = 0; i < 7; i++) {",
+							"    r += chars.charAt(Math.floor(Math.random() * chars.length));",
+							"}",
+							"pm.environment.set('random_name', r);",
+							"pm.environment.set('random_email', `user_${r}@test.com`);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"{{random_name}}\",\"email\":\"{{random_email}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2 - create category",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.environment.set(\"catId\", jsonData.id);",
+							"",
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';",
+							"let r = '';",
+							"for (let i = 0; i < 7; i++) {",
+							"    r += chars.charAt(Math.floor(Math.random() * chars.length));",
+							"}",
+							"pm.environment.set('random_cat', r);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"{{random_cat}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/categories",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3 - create event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const jsonData = pm.response.json();",
+							"pm.environment.set(\"eventId\", jsonData.id);",
+							"",
+							"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"annotation\":\"Fuga non aut nam. Eum illum vel delectus dolore. Sint aperiam similique. Nihil nemo sint et.\",\n\"category\":\"{{catId}}\",\n\"description\":\"Dicta dolorem et fugit beMolestiae assumenda excepturi est necessitatibus dolorum quia libero. Voluptas ipsam ab.\\n \\rVoluptates hic quisquam maiores molestiae amet ex delectus quia rerum. Quia et eos iste dolor sint teneturaccusantium. Fugit ut odio rerum unde. Et praesentiumcumque ut.\",\n\"eventDate\":\"2025-12-22 12:13:56\",\n\"location\":{\"lat\":39.953,\"lon\":115.1386},\n\"paid\":\"true\",\n\"participantLimit\":\"564\",\n\"requestModeration\":\"false\",\n\"title\":\"Qui saepe dolore consectetur aut officia et.\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/events",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4 - Модерация, отказ без причины",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Возврат с модерации без указания причины - ответ должен содержать код статуса 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"stateAction\":\"RETURN_EVENT_FOR_MODIFY\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/events/{{eventId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"events",
+						"{{eventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5 - Модерация, отказ с указанием причины",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Возврат с модерации с указанием причины - ответ должен содержать код статуса 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"stateAction\":\"RETURN_EVENT_FOR_MODIFY\", \"moderationResolution\":\"помещение не вместит столько людей\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/events/{{eventId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"events",
+						"{{eventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6 - Публичный запрос события",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ответ должен содержать код статуса 404 \", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/events/{{eventId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"events",
+						"{{eventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "7 - Пользовательский запрос события",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Ответ должен содержать код статуса 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"    pm.expect(target).to.have.property('moderationResolution');",
+							"    pm.expect(target).to.have.property('moderationResolution').that.is.a('string').and.not.empty;",
+							"    pm.expect(target.state).equal('MODERATION_FAILED');",
+							"});",
+							"",
+							"pm.test(\"Ответ должен содержать непустую причину отказа\", function () {",
+							"    pm.expect(target).to.have.property('moderationResolution');",
+							"    pm.expect(target).to.have.property('moderationResolution').that.is.a('string').and.not.empty;",
+							"});",
+							"",
+							"pm.test(\"Статус события должен быть 'MODERATION_FAILED'\", function () {",
+							"    pm.expect(target.state).equal('MODERATION_FAILED');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"annotation\":\"Fuga non aut nam. Eum illum vel delectus dolore. Sint aperiam similique. Nihil nemo sint et.\",\n\"category\":\"{{catId}}\",\n\"description\":\"Dicta dolorem et fugit beMolestiae assumenda excepturi est necessitatibus dolorum quia libero. Voluptas ipsam ab.\\n \\rVoluptates hic quisquam maiores molestiae amet ex delectus quia rerum. Quia et eos iste dolor sint teneturaccusantium. Fugit ut odio rerum unde. Et praesentiumcumque ut.\",\n\"eventDate\":\"2025-12-22 12:13:56\",\n\"location\":{\"lat\":39.953,\"lon\":115.1386},\n\"paid\":\"true\",\n\"participantLimit\":\"564\",\n\"requestModeration\":\"false\",\n\"title\":\"Qui saepe dolore consectetur aut officia et.\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/events/{{eventId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"events",
+						"{{eventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "8 - Пользователь отрабатывает комментарии",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Отправка на повторную модерацию - ответ должен содержать код статуса 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Ответ должен содержать непустую причину отказа\", function () {",
+							"    pm.expect(target).to.have.property('moderationResolution');",
+							"    pm.expect(target).to.have.property('moderationResolution').that.is.a('string').and.not.empty;",
+							"});",
+							"",
+							"pm.test(\"Статус события должен быть 'PENDING'\", function () {",
+							"    pm.expect(target.state).equal('PENDING');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"participantLimit\":\"72\",\n\"stateAction\":\"SEND_TO_REVIEW\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/users/{{userId}}/events/{{eventId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{userId}}",
+						"events",
+						"{{eventId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "9 - Модерация с пубикацией",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const target = pm.response.json();",
+							"",
+							"pm.test(\"Публикация - ответ должен содержать код статуса 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test(\"Ответ НЕ должен содержать причину прежнего отказа\", function () {",
+							"    pm.expect(target).to.not.have.property('moderationResolution');",
+							"});",
+							"",
+							"pm.test(\"Статус события должен быть 'PUBLISHED'\", function () {",
+							"    pm.expect(target.state).equal('PUBLISHED');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"stateAction\":\"PUBLISH_EVENT\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/admin/events/{{eventId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"admin",
+						"events",
+						"{{eventId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "catId",
+			"value": ""
+		},
+		{
+			"key": "eventId",
+			"value": ""
+		},
+		{
+			"key": "random_name",
+			"value": ""
+		},
+		{
+			"key": "random_email",
+			"value": ""
+		},
+		{
+			"key": "random_cat",
+			"value": ""
+		}
+	]
+}
