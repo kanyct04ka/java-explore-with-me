@@ -36,4 +36,5 @@ public class EventUpdateAdminDto {
     private Boolean paid;
     private Boolean requestModeration;
     private EventStateAction stateAction;
+    private String moderationResolution;
 }

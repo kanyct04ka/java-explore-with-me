@@ -10,7 +10,7 @@ public interface EventService {
 
     EventFullDto addEvent(long userId, EventCreateDto eventCreateDto);
 
-    EventFullDto getEvent(long eventId, String uri, String ip);
+    EventPublicFullDto getEvent(long eventId, String uri, String ip);
 
     List<EventShortDto> getEvents(
             String text,
